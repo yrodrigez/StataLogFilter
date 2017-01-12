@@ -9,27 +9,28 @@ import java.util.regex.Pattern;
 public class main {
 
     public static ArrayList<String> getParams(StringBuilder log){
-        ArrayList<String> params = new ArrayList<String>();
+        ArrayList<String> params = new ArrayList<>();
 
+        String lineSeparator = System.getProperty("line.separator");
         Pattern pattern = Pattern.compile("\\.\\s\\*\\*\\*.+\\*\\*\\*"
                 + System.getProperty("line.separator") +
                 "\\..+"
-                + System.getProperty("line.separator")
-                + System.getProperty("line.separator")
+                + lineSeparator
+                + lineSeparator
                 +".*" +
-                System.getProperty("line.separator")+
+                lineSeparator+
                 ".*" +
-                System.getProperty("line.separator") +
+                lineSeparator +
                 ".*" +
-                System.getProperty("line.separator") +
+                lineSeparator +
                 ".*" +
-                System.getProperty("line.separator") +
+                lineSeparator +
                 ".*" +
-                System.getProperty("line.separator") +
+                lineSeparator +
                 ".*" +
-                System.getProperty("line.separator") +
+                lineSeparator +
                 ".*" +
-                System.getProperty("line.separator") +
+                lineSeparator +
                 "-+");
         Matcher matcher = pattern.matcher(log);
         while (matcher.find()){
@@ -57,10 +58,12 @@ public class main {
     }
 
     public static void main(String [] args) throws FileNotFoundException {
-        StringBuilder log = logFileString("C:\\Users\\Yago\\Downloads\\Pruebalog.log");
+        StringBuilder log = logFileString("E:\\Downloads\\Pruebalog.log");
 
         for(String s: getParams(log)){
             System.out.println(s);
+
+            //break;
         }
 
     }
