@@ -4,25 +4,26 @@ import java.util.Map;
 /**
  * @author Yago on 12/01/2017.
  */
-public class Observation {
+public class Company {
 
   private String _symbol;
-  private ArrayList<Map<String, Double>> _observations;
+  private ArrayList<Map<String, Double>> _parameters;
 
-  public Observation(
+  public Company(
     final String symbol,
     final ArrayList<Map<String, Double>> observations
   ) {
     super();
 
     _symbol = symbol;
-    _observations = observations;
+    _parameters = observations;
   }
 
-  public Observation(final String symbol){
+  public Company(final String symbol){
     super();
 
     _symbol = symbol;
+    _parameters = new ArrayList<>();
   }
 
   public String getSymbol() {
@@ -34,10 +35,22 @@ public class Observation {
   }
 
   public ArrayList<Map<String, Double>> getObservations() {
-    return _observations;
+    return _parameters;
   }
 
   public void setObservations(final ArrayList<Map<String, Double>> observations) {
-    this._observations = observations;
+    this._parameters = observations;
+  }
+
+  public void addObservation(Map<String, Double> observation) {
+    _parameters.add(observation);
+  }
+
+  @Override
+  public String toString() {
+    return "Company{" +
+      "_symbol='" + _symbol + '\'' +
+      ", _parameters=" + _parameters.toString() +
+      '}' + '\n';
   }
 }

@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,36 +12,50 @@ public class CompanyBuilder {
     return _instance;
   }
 
-  private ArrayList<String> parameters;
 
-  private CompanyBuilder() {
-  }
 
-  public Map<String, ArrayList<Observation>> buildCompanies(ArrayList<String> parameters) {
-    Map<String, ArrayList<Observation>> companies = new HashMap<>();
+  public Map<String, Company> buildCompanies(ArrayList<String> parameters) {
+    Map<String, Company> companies = new HashMap<>();
 
     parameters.forEach(parameter -> {
-
       String symbol = buildCompanySymbol(parameter);
 
-      Observation observation = new Observation(symbol);
+      Map<String, Double> observation = buildObservations(parameter);
 
-      Map<String, Double> observations = buildObservation(parameter);
+      if( companies.containsKey( symbol ) ){
+        companies.get( symbol ).addObservation( observation );
+      } else {
+        Company company = new Company( symbol );
+        company.addObservation( observation );
 
+        companies.put( symbol, company );
+      }
     });
 
     return companies;
   }
 
-  private Map<String, Double> buildObservation(String parameter) {
+  private Map<String, Double> buildObservations(String parameter) {
     Map<String, Double> observation = new HashMap<>();
 
     Double numberOfObservation = getNumberOfObs(parameter);
-
     observation.put("Number of obs", numberOfObservation);
 
+    Double rSqared = getRSqared(parameter);
+    observation.put("R-Sqared", rSqared);
 
     return observation;
+  }
+
+  private Double getRSqared ( String parameter ){
+    Matcher matcher = Pattern.compile( "(\\s{2})+(R-squared)(\\s+=\\s+)(([0-9]+\\.?[0-9]+)|(\\.?[0-9]+))" ).matcher(parameter);
+    String [] values;
+    if( matcher.find() ) {
+      values = matcher.group().split("=");
+      return Double.parseDouble(values[1]);
+    } else {
+      throw new IllegalArgumentException("No R-squared found");
+    }
   }
 
   private Double getNumberOfObs(String parameter) {

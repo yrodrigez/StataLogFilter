@@ -58,13 +58,12 @@ public class main {
     }
 
     public static void main(String [] args) throws FileNotFoundException {
-        StringBuilder log = logFileString("E:\\Downloads\\Pruebalog.log");
+        StringBuilder log = logFileString("E:\\Downloads\\Pruebalog (1).log");
 
-        for(String s: getParams(log)){
-            System.out.println(s);
+        ArrayList<String> parameters = getParams( log );
 
-            //break;
-        }
+        System.out.println(CompanyBuilder.getInstance().buildCompanies( parameters ));
+
 
     }
 }
