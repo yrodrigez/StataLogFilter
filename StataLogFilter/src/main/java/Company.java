@@ -7,11 +7,11 @@ import java.util.Map;
 public class Company {
 
   private String _symbol;
-  private ArrayList<Map<String, Double>> _parameters;
+  private ArrayList<Map<String, String>> _parameters;
 
   public Company(
     final String symbol,
-    final ArrayList<Map<String, Double>> observations
+    final ArrayList<Map<String, String>> observations
   ) {
     super();
 
@@ -34,16 +34,16 @@ public class Company {
     this._symbol = symbol;
   }
 
-  public ArrayList<Map<String, Double>> getObservations() {
+  public ArrayList<Map<String, String>> getObservations() {
     return _parameters;
   }
 
-  public void setObservations(final ArrayList<Map<String, Double>> observations) {
+  public void setObservations(final ArrayList<Map<String, String>> observations) {
     this._parameters = observations;
   }
 
-  public void addObservation(Map<String, Double> observation) {
-    _parameters.add(observation);
+  public void addObservation(Map<String, String> observation) {
+    _parameters.add( observation );
   }
 
   @Override

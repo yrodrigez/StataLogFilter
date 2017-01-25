@@ -20,7 +20,7 @@ public class CompanyBuilder {
     parameters.forEach(parameter -> {
       String symbol = buildCompanySymbol(parameter);
 
-      Map<String, Double> observation = buildObservations(parameter);
+      Map<String, String> observation = buildObservations(parameter);
 
       if( companies.containsKey( symbol ) ){
         companies.get( symbol ).addObservation( observation );
@@ -35,36 +35,41 @@ public class CompanyBuilder {
     return companies;
   }
 
-  private Map<String, Double> buildObservations(String parameter) {
-    Map<String, Double> observation = new HashMap<>();
+  private Map<String, String> buildObservations(String parameter) {
+    Map<String, String> observation = new HashMap<>();
 
-    Double numberOfObservation = getNumberOfObs(parameter);
-    observation.put("Number of obs", numberOfObservation);
 
-    Double rSqared = getRSqared(parameter);
-    observation.put("R-Sqared", rSqared);
+      String rSqared = getAdjRsquared( parameter );
+      observation.put("Adj R-squared", rSqared);
 
-    return observation;
+      String formula = buildFormula( parameter );
+      observation.put( "Formula", formula.substring( 1 ) );
+
+      /*String numberOfObservation = getNumberOfObs(parameter);
+      observation.put("Number of obs", numberOfObservation);*/
+
+      return observation;
   }
 
-  private Double getRSqared ( String parameter ){
-    Matcher matcher = Pattern.compile( "(\\s{2})+(R-squared)(\\s+=\\s+)(([0-9]+\\.?[0-9]+)|(\\.?[0-9]+))" ).matcher(parameter);
+  private String getAdjRsquared(String parameter ){
+    Matcher matcher = Pattern.compile( "(\\s{2})+(Adj R-squared)(\\s+=\\s+)(([0-9]+\\.?[0-9]+)|(\\.?[0-9]+))" ).matcher(parameter);
     String [] values;
     if( matcher.find() ) {
-      values = matcher.group().split("=");
-      return Double.parseDouble(values[1]);
+      values = matcher.group().replaceAll("\\s", "").split("=");
+
+      return values[1];
     } else {
-      throw new IllegalArgumentException("No R-squared found");
+      throw new IllegalArgumentException("No ADJ R-squared found");
     }
   }
 
-  private Double getNumberOfObs(String parameter) {
+  private String getNumberOfObs(String parameter) {
     Matcher matcher = Pattern.compile("(Number\\sof\\sobs)(\\s+=\\s+)(([0-9]+\\.?[0-9]+)|(\\.?[0-9]+))").matcher(parameter);
     String stringOfObs = matcher.find() ? matcher.group() : "";
 
     matcher = Pattern.compile("[0-9]+").matcher(stringOfObs);
 
-    return matcher.find() ? Double.parseDouble(matcher.group()) : 0;
+    return matcher.find() ? matcher.group() : "";
   }
 
   private String buildCompanySymbol(String parameter) {
@@ -74,4 +79,15 @@ public class CompanyBuilder {
     matcher = Pattern.compile("[A-z]+").matcher(badSymbol);
     return matcher.find() ? matcher.group() : "";
   }
+
+  private String buildFormula(String parameter) {
+    Matcher matcher = Pattern.compile("\\. reg.*").matcher(parameter);
+
+    if ( matcher.find() ){
+      return matcher.group();
+    } else {
+      throw new IllegalArgumentException( "Formula not found..." );
+    }
+  }
+
 }
