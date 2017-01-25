@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class main {
+public class Main {
 
     public static ArrayList<String> getParams(StringBuilder log) {
         ArrayList<String> params = new ArrayList<>();
@@ -72,8 +72,7 @@ public class main {
 
         Double GT = .85;
         /*
-        *FIN DE MODIFICACIONES
-        *
+        * FIN DE MODIFICACIONES *
          */
 
         StringBuilder log = logFileString(logPath);
