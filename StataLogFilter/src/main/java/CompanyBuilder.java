@@ -18,17 +18,21 @@ public class CompanyBuilder {
     Map<String, Company> companies = new HashMap<>();
 
     parameters.forEach(parameter -> {
-      String symbol = buildCompanySymbol(parameter);
+      try {
+        String symbol = buildCompanySymbol(parameter);
 
-      Map<String, String> observation = buildObservations(parameter);
+        Map<String, String> observation = buildObservations(parameter);
 
-      if( companies.containsKey( symbol ) ){
-        companies.get( symbol ).addObservation( observation );
-      } else {
-        Company company = new Company( symbol );
-        company.addObservation( observation );
+        if (companies.containsKey(symbol)) {
+          companies.get(symbol).addObservation(observation);
+        } else {
+          Company company = new Company(symbol);
+          company.addObservation(observation);
 
-        companies.put( symbol, company );
+          companies.put(symbol, company);
+        }
+      } catch ( IllegalArgumentException ex ) {
+        // do nothing on ex
       }
     });
 
@@ -43,12 +47,22 @@ public class CompanyBuilder {
       observation.put("Adj R-squared", rSqared);
 
       String formula = buildFormula( parameter );
-      observation.put( "Formula", formula.substring( 1 ) );
+      observation.put( "Formula", formula );
+
+      String file = buildFile( parameter );
+      observation.put( "File", file );
 
       /*String numberOfObservation = getNumberOfObs(parameter);
       observation.put("Number of obs", numberOfObservation);*/
 
       return observation;
+  }
+
+  private String buildFile( String parameter ) {
+    Matcher matcher = Pattern.compile("\\*\\*\\*\\s[A-z]+[0-9]+\\.csv\\s\\*\\*\\*").matcher(parameter);
+    String badSymbol = matcher.find() ? matcher.group() : "";
+
+    return badSymbol.replace("*", "").replace(" ", "");
   }
 
   private String getAdjRsquared(String parameter ){
@@ -84,7 +98,7 @@ public class CompanyBuilder {
     Matcher matcher = Pattern.compile("\\. reg.*").matcher(parameter);
 
     if ( matcher.find() ){
-      return matcher.group();
+      return matcher.group().substring( 1 );
     } else {
       throw new IllegalArgumentException( "Formula not found..." );
     }

@@ -61,10 +61,10 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         /*
-        * Modificar aquí *
+        * Modificar aqui *
         */
 
-        String logPath = "C:\\Users\\yago\\Downloads\\Pruebalog (1).log";
+        String logPath = "E:\\Downloads\\Pruebalog (1).log";
 
         String outPath = "C:\\Users\\yago\\Documents";
 
@@ -91,7 +91,7 @@ public class Main {
                             else return 0;
                         })
         );
-        System.out.println(companyMap.values());
+        System.out.println("finished!");
 
         buildCSVFile(outPath, fileName, companyMap.values(), GT);
 
@@ -99,7 +99,7 @@ public class Main {
 
     private static void buildCSVFile(String outPath, String fileName, Collection<Company> companies, double GT) throws IOException {
 
-        StringBuilder csv = new StringBuilder("Company;Adj R-squared;Formula");
+        StringBuilder csv = new StringBuilder("Company;Adj R-squared;Formula;File");
         companies.forEach(company -> {
             if(Double.parseDouble(company.getObservations().get(0).get("Adj R-squared")) > GT) {
                 csv.append(System.getProperty("line.separator"));
@@ -108,7 +108,9 @@ public class Main {
 
                 csv.append(company.getObservations().get(0).get("Adj R-squared")).append(";");
 
-                csv.append(company.getObservations().get(0).get("Formula"));
+                csv.append(company.getObservations().get(0).get("Formula")).append(";");
+
+                csv.append(company.getObservations().get(0).get("File"));
             }
         });
 
